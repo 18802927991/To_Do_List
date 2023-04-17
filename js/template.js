@@ -9,10 +9,11 @@
 	 */
 	function Template() {
 		this.defaultTemplate
-		=	'<li data-id="{{id}}">'
+		=	'<li data-id="{{id}}" class={{wrapClass}}>'
 		+		'<div class="view">'
 		+			'<label>{{title}}</label>'
 		+			'<button class="destroy"></button>'
+		+			'<button class="complete">Click to complete</button>'
 		+		'</div>'
 		+	'</li>';
 	}
@@ -39,8 +40,10 @@
 
 		for (i = 0, l = data.length; i < l; i++) {
 			var template = this.defaultTemplate;
-
+			var wrapClass = data[i].complete? 'completeWrap':'activeWrap';
 			template = template.replace('{{id}}', data[i].id);
+
+			template = template.replace('{{wrapClass}}', wrapClass);
 			template = template.replace('{{title}}', data[i].title);
 
 			view = view + template;

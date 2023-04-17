@@ -125,6 +125,27 @@
 	};
 
 	/**
+	 * Will complete an item from the Store based on its ID
+	 *
+	 * @param {number} id The ID of the item you want to remove
+	 * @param {function} callback The callback to fire after saving
+	 */
+	Store.prototype.complete = function (id, callback) {
+		var data = JSON.parse(localStorage[this._dbName]);
+		var todos = data.todos;
+
+		for (var i = 0; i < todos.length; i++) {
+			if (todos[i].id == id) {
+				todos[i].complete = true;
+				break;
+			}
+		}
+
+		localStorage[this._dbName] = JSON.stringify(data);
+		callback.call(this, JSON.parse(localStorage[this._dbName]).todos);
+	};
+
+	/**
 	 * Will drop all storage and start fresh
 	 *
 	 * @param {function} callback The callback to fire after dropping the data

@@ -33,6 +33,14 @@
 			that.removeItem(item.id);
 		});
 
+		that.view.bind('itemComplete', function (item) {
+			that.completeItem(item.id, true);
+		});
+
+		that.view.bind('clearCompleted', function (items) {
+			that.clearCompleted(items);
+		});
+
 	}
 
 	/**
@@ -46,6 +54,7 @@
 		this._updateFilterState(page);
 	};
 
+
 	/**
 	 * An event to fire on load. Will get all items and display them in the
 	 * todo-list
@@ -58,14 +67,27 @@
 	};
 
 	/**
-	 * Renders all active tasks
+	 * An event to fire on load. Will get complete items and display them in the
+	 * todo-list
 	 */
-	Controller.prototype.showActive = function () {
-		var that = this;
-		that.model.read(function (data) {
-			that.view.render('showEntries', data);
-		});
-	};
+		Controller.prototype.showActive = function () {
+			var that = this;
+			that.model.read(function (data) {
+				var completeData = data.filter(item=>item.complete!==true);
+				that.view.render('showEntries', completeData);
+			});
+		};
+	/**
+	 * An event to fire on load. Will get complete items and display them in the
+	 * todo-list
+	 */
+		Controller.prototype.showCompleted = function () {
+			var that = this;
+			that.model.read(function (data) {
+				var completeData = data.filter(item=>item.complete===true);
+				that.view.render('showEntries', completeData);
+			});
+		};
 
 	/**
 	 * An event to fire whenever you want to add an item. Simply pass in the event
@@ -132,6 +154,39 @@
 		});
 
 		that._filter();
+	};
+
+	/**
+	 * By giving it an ID it'll find the DOM element matching that ID,
+	 * remove it from the DOM and also remove it from storage.
+	 *
+	 * @param {number} id The ID of the item to remove from the DOM and
+	 * storage
+	 */
+	Controller.prototype.completeItem = function (id,complete) {
+
+		var that = this;
+		// that.model.update(id, {complete: complete}, function () {
+		// 	that.view.render('completeItem', {id: id, complete: complete});
+		// });
+		that.model.update(id, {complete: complete}, this.setView(document.location.hash));
+		location.reload(document.location.hash);
+	};
+	/**
+	 * By giving it an ID it'll find the DOM element matching that ID,
+	 * remove it from the DOM and also remove it from storage.
+	 *
+	 * @param {number} id The ID of the item to remove from the DOM and
+	 * storage
+	 */
+	Controller.prototype.clearCompleted = function (items) {
+
+		var that = this;
+		items.forEach(item => {
+			that.model.update(item.id, {complete: false}, this.setView(document.location.hash));
+		});
+		location.reload(document.location.hash);
+
 	};
 
 	/**

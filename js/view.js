@@ -32,6 +32,14 @@
             this.$todoList.removeChild(elem);
         }
     };
+    View.prototype._complete = function (id) {
+        var elem = qs('[data-id="' + id + '"]');
+        if (!elem) {
+            return;
+        }
+        qs('#filters [data-id="' + id + '"]').className = 'selected';
+
+    };
 
     View.prototype._setFilter = function (currentPage) {
         qs('#filters .selected').className = '';
@@ -71,6 +79,7 @@
             label.textContent = title;
         });
     };
+    
 
     View.prototype.render = function (viewCmd, parameter) {
         var that = this;
@@ -98,7 +107,10 @@
             },
             editItemDone: function () {
                 that._editItemDone(parameter.id, parameter.title);
-            }
+            },
+            completeItem: function () {
+                that._complete(parameter.id, parameter.complete);
+            },
         };
 
         viewCommands[viewCmd]();
@@ -128,6 +140,7 @@
             }
         });
     };
+
 
     View.prototype._bindItemEditCancel = function (handler) {
         var that = this;
@@ -163,6 +176,18 @@
 
         } else if (event === 'itemEditCancel') {
             that._bindItemEditCancel(handler);
+        } else if (event === 'itemEditDone') {
+            that._bindItemEditCancel(handler);
+        } else if (event === 'itemComplete') {
+            $live('#todo-list .complete', 'click', function () {
+                handler({id: that._itemId(this)});
+            });
+        } else if (event === 'clearCompleted') {
+            $live('#clear-completed', 'click', function () {
+                var data = JSON.parse(localStorage['todos']);
+                console.log('Object.values(data.todos)',Object.values(data.todos));
+                handler(data.todos);
+            });
         }
     };
 
