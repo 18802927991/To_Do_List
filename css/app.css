@@ -19,7 +19,6 @@ button {
   appearance: none;
 }
 button.complete{
-  display:none;
   font-size:13px;
   font-weight:400;
 	background-color: royalblue;
@@ -36,6 +35,9 @@ button.complete{
   right: 50px;
   bottom: 0;
 
+}
+.completeWrap button.complete{
+  background-color: green;
 }
 
 button.complete:hover{

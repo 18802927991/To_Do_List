@@ -13,7 +13,7 @@
 		+		'<div class="view">'
 		+			'<label>{{title}}</label>'
 		+			'<button class="destroy"></button>'
-		+			'<button class="complete">Click to complete</button>'
+		+			'<button class="complete">{{buttonText}}</button>'
 		+		'</div>'
 		+	'</li>';
 	}
@@ -41,9 +41,11 @@
 		for (i = 0, l = data.length; i < l; i++) {
 			var template = this.defaultTemplate;
 			var wrapClass = data[i].complete? 'completeWrap':'activeWrap';
+			var buttonText = data[i].complete? 'Done':'Click to complete';
 			template = template.replace('{{id}}', data[i].id);
 
 			template = template.replace('{{wrapClass}}', wrapClass);
+			template = template.replace('{{buttonText}}', buttonText);
 			template = template.replace('{{title}}', data[i].title);
 
 			view = view + template;
